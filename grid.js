@@ -6,7 +6,7 @@ class Grid {
         this.height = height;
         this.gridSizeX = this.width / this.tileSize;
         this.gridSizeY = this.height / this.tileSize;
-        this.draggingPos = null;
+        this.draggingBlock = null;
         this.dragging = false;
 
         this.blockGrid = new Array(this.gridSizeX); 
@@ -38,22 +38,34 @@ class Grid {
         });
     }
 
-    CalculateGridPos(x, y) {
-        let gridX  = Math.floor(x / this.tileSize);
-        let gridY  = Math.floor(y / this.tileSize);
+    CalculateGridPos(x, y, tileSizeX, tileSizeY) {
+        let gridX  = Math.floor(x / tileSizeX);
+        let gridY  = Math.floor(y / tileSizeY);
         return {x: gridX, y: gridY};
     }
+
+    CalculateRealPos(gridX, gridY, tileSizeX, tileSizeY) {
+        let x = gridX * tileSizeX;
+        let y = gridY * tileSizeY;
+        return {x: x, y:y}
+    }
+
     SetBlock(x, y) {
-        let gridPos = this.CalculateGridPos(x, y);
-        this.blockGrid[gridPos.x][gridPos.y] = true;
+        let gridPos = this.CalculateGridPos(x, y, this.tileSize, this.tileSize);
+        let realPos = this.CalculateRealPos(gridPos.x, gridPos.y, this.tileSize, this.tileSize);
+        this.draggingBlock.SetPos(realPos.x, realPos.y);
+        this.blockGrid[gridPos.x][gridPos.y] = this.draggingBlock;
+        this.draggingBlock = null;
     }
 
     SetDraggingPos(x, y, gridPosX, gridPosY) {
-        if (this.draggingPos == null) {
-            this.draggingPos = new PIXI.Point({x: x, y: y});
+        let xOffset = x - (this.tileSize / 2);
+        let yOffset = y - (this.tileSize / 2);
+
+        if (this.draggingBlock == null) {
+            this.draggingBlock = new Block(xOffset, yOffset, this.tileSize);
         } else {
-            this.draggingPos.x = x;
-            this.draggingPos.y = y;
+            this.draggingBlock.SetPos(xOffset, yOffset);
         }
     }
 
@@ -71,21 +83,15 @@ class Grid {
                 graphics.drawRect(xPos, yPos, this.tileSize, this.tileSize);
                 this.container.addChild(graphics);
 
-                let gridPos = this.CalculateGridPos(xPos, yPos);
-                if (this.blockGrid[gridPos.x][gridPos.y] == true) {
-                    let graphics2 = new PIXI.Graphics();
-                    graphics2.lineStyle({width: 1, color:  0xFFFF00, alignment: 0.5});
-                    graphics2.drawRoundedRect(xPos + 3, yPos + 3 , this.tileSize - 6, this.tileSize - 6);
-                    this.container.addChild(graphics2);
+                let gridPos = this.CalculateGridPos(xPos, yPos, this.tileSize, this.tileSize);
+                if (this.blockGrid[gridPos.x][gridPos.y] != null) {
+                    this.container.addChild(this.blockGrid[gridPos.x][gridPos.y].GetGraphics());
                 }
             }
         }
 
-        if (this.dragging == true) {
-            let graphics = new PIXI.Graphics();
-            graphics.lineStyle({width: 1, color:  0xFFFF00, alignment: 0.5});
-            graphics.drawRoundedRect(this.draggingPos.x - (this.tileSize / 2), this.draggingPos.y - (this.tileSize / 2), this.tileSize - 6, this.tileSize - 6);
-            this.container.addChild(graphics);
+        if (this.draggingBlock != null) {
+            this.container.addChild(this.draggingBlock.GetGraphics());
         }
     }
 }
