@@ -19,14 +19,14 @@ class Game {
 
         this.particleContainer = new PIXI.Container();
 
-        this.textContainer = new Textfield(this.width - (this.tileSize * 3), 0);
-        this.gridContainer = new Grid(this.gridWidth, this.height, this.tileSize);
+        this.text = new Textfield(this.width - (this.tileSize * 3), 0);
+        this.grid = new Grid(this.gridWidth, this.height, this.tileSize);
 
 
-        this.app.stage.addChild(this.textContainer.container);
+        this.app.stage.addChild(this.text.container);
         this.app.stage.addChild(this.frame);
         this.app.stage.addChild(this.particleContainer);
-        this.app.stage.addChild(this.gridContainer.container);
+        this.app.stage.addChild(this.grid.container);
 
         this.app.ticker.add((delta) => {
             this.Update();
@@ -63,25 +63,36 @@ class Game {
     }
 
     Update() {
-        this.textContainer.clear();
+        this.text.clear();
         let newX = input.getMousePosX();
         let newY = input.getMousePosY();
-        if (newX != null) {
+        let mouseDown = input.getMouseDown();
+        
+        
+        if (newX != null && newY != null) {
             this.goal.pos.x = newX;
             this.goal.gridPos.x = Math.floor(newX / this.tileSize);
-        }
-        if (newY != null) {
+
             this.goal.pos.y = newY;
             this.goal.gridPos.y = Math.floor(newY / this.tileSize);
+
+            if (mouseDown == true) {
+                this.grid.dragging = true;
+                this.grid.SetDraggingPos(newX, newY);
+            } else if (this.grid.dragging == true) {
+                this.grid.SetBlock(newX, newY);
+                this.grid.dragging = false;
+            }
         }
 
         this.SpawnParticle();
         this.UpdateParticles();
-        this.textContainer.addtext(`FPS: ${this.app.ticker.FPS}`);
-        this.textContainer.addtext(`MouseX: ${input.getMousePosX()}, MouseY: ${input.getMousePosY()}`);
-        this.textContainer.addtext(`PosX: ${goal.pos.x}, PosY: ${goal.pos.y}`);
-        this.textContainer.addtext(`GridX: ${goal.gridPos.x}, GridY: ${goal.gridPos.y}`);
-        this.textContainer.addtext(`nrOfParticles: ${this.particles.length}`);
+        this.text.addtext(`FPS: ${this.app.ticker.FPS}`);
+        this.text.addtext(`MouseX: ${input.getMousePosX()}, MouseY: ${input.getMousePosY()}`);
+        this.text.addtext(`Dragging: ${this.grid.dragging}`);
+        this.text.addtext(`PosX: ${goal.pos.x}, PosY: ${goal.pos.y}`);
+        this.text.addtext(`GridX: ${goal.gridPos.x}, GridY: ${goal.gridPos.y}`);
+        this.text.addtext(`nrOfParticles: ${this.particles.length}`);
 
 
     }
@@ -108,8 +119,8 @@ class Game {
     Draw() {
         
         this.DrawParticles();
-        this.textContainer.Draw();
-        this.gridContainer.Draw();
+        this.text.Draw();
+        this.grid.Draw();
         
     }
 }

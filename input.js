@@ -4,6 +4,8 @@ var input = (function () {
     var mouseX;
     var mouseY;
     var inBounds;
+    var mouseDown;
+
 
     function _inputMousePos(x, y) {
         if (inBounds == true) {
@@ -20,6 +22,12 @@ var input = (function () {
         inBounds = bound;
     }
 
+    function _inputMouseDown(down) {
+        if(inBounds == true) {
+            mouseDown = down;
+        }          
+    }
+
     return {
         inputMousePos: function (x, y) {
             _inputMousePos(x, y);
@@ -27,8 +35,14 @@ var input = (function () {
         inputMouseBounds: function (bound) {
             _inputMouseBounds(bound);
         },
+        inputMouseDown: function (down) {
+            _inputMouseDown(down);
+        },
         getMouseBounds: function () {
             return inBounds;
+        },
+        getMouseDown: function () {
+            return mouseDown;
         },
         getMousePosX: function () {
             return mouseX;
