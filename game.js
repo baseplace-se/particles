@@ -84,9 +84,13 @@ class Game {
                 this.grid.dragging = false;
             }
         }
-
-        this.SpawnParticle();
+        
+        
+        // this.SpawnParticle();
         this.UpdateParticles();
+        let goalGridPos = this.grid.CalculateGridPos(this.goal.pos.x, this.goal.pos.y, this.tileSize, this.tileSize);
+        let movementGrid = this.grid.CalculateMovementGrid(goalGridPos.x, goalGridPos.y, this.grid, this.grid.gridSizeX, this.grid.gridSizeY);
+        this.grid.movementGrid = movementGrid;
         this.text.addtext(`FPS: ${this.app.ticker.FPS}`);
         this.text.addtext(`MouseX: ${input.getMousePosX()}, MouseY: ${input.getMousePosY()}`);
         this.text.addtext(`Dragging: ${this.grid.dragging}`);

@@ -2,6 +2,7 @@ class Particle {
     constructor(x, y, goalX, goalY) {
         this.pos = new PIXI.Point(x, y);
         this.goal = new PIXI.Point(goalX, goalY);
+
         this.atGoal = false;
 
     }
@@ -25,6 +26,9 @@ class Particle {
 
     Update() {
         if(this.atGoal == false) {
+            // console.log(typeof this.goal);
+            // console.log(typeof this.pos);
+            // console.log(new PIXI.Point(0,0).subtract(new PIXI.Point(0,0)));
             let difference = this.goal.subtract(this.pos);
             // console.log(`Difference: ${difference}`);
             if(difference.magnitude() > 0.5) {

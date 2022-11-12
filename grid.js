@@ -8,7 +8,8 @@ class Grid {
         this.gridSizeY = this.height / this.tileSize;
         this.draggingBlock = null;
         this.dragging = false;
-
+        this.movementDirections = [new PIXI.Point(1, 0), new PIXI.Point(-1, 0), new PIXI.Point(0, 1), new PIXI.Point(0, -1)];
+        this.movementGrid = null;
         this.blockGrid = new Array(this.gridSizeX); 
         for (var i = 0; i < this.gridSizeX; i++) {
             this.blockGrid[i] = new Array(this.gridSizeY);
@@ -69,6 +70,83 @@ class Grid {
         }
     }
 
+    // GetBlockGrid(gridX, gridY) {
+    //     let blockGrid = new Array(this.gridSizeX); 
+    //     for (var x = 0; x < this.gridSizeX; x++) {
+    //         blockGrid[x] = new Array(this.gridSizeY);
+    //         for (var y = 0; y < this.gridSizeY; y++ ) {
+
+    //             blockGrid[x][y] = this.blockGrid[x][y] instanceof Block;
+    //         }
+    //         // blockGrid[i] = instanceof Block;
+    //     }
+    // }
+
+    IsGridPosMovable(x, y) {
+        if(x < 0 || y < 0) {
+            return false;
+        }
+        if(x > this.gridSizeX || y > this.gridSizeY) {
+            return false;
+        }
+        return !(this.blockGrid[x][y] instanceof Block);
+    }
+    ContainsPos(posList, pos) {
+        let returnValue = false;
+        posList.forEach(element => {
+            if(element.x == pos.x && element.y == pos.y) {
+                returnValue = true;
+                return
+            }
+        });
+        return returnValue;
+    }
+
+    CalculateMovementGrid(gridX, gridY, grid, gridSizeX, gridSizeY) {
+        // let gridPos = this.CalculateGridPos(x, y, this.tileSize, this.tileSize)
+        let posList = new Array();
+        let visitedPos = new Array();
+
+        let movementGrid = new Array(gridSizeX); 
+        for (var i = 0; i < gridSizeX; i++) {
+            movementGrid[i] = new Array(gridSizeY);
+        }
+
+        let startPos =  new PIXI.Point(gridX, gridY);
+        startPos.depth = 0;
+        posList.push(startPos);
+        while(posList.length > 0) {
+            let currentPos = posList.shift();
+            if(grid.IsGridPosMovable(currentPos.x, currentPos.y)) {
+                movementGrid[currentPos.x][currentPos.y] = currentPos.depth;
+                // console.log(currentPos.depth);
+                this.movementDirections.forEach((point) =>  {
+                    let newPos = currentPos.add(point);
+                    newPos.depth = currentPos.depth + 1;
+                    // let newDepth = currentPos.depth + 1;
+                    if(newPos.y < 0 || newPos.x < 0) {
+                        return;
+                    }
+                    if(newPos.y >= gridSizeY ||  newPos.x >= gridSizeX) {
+                        return;
+                    }
+    
+                    if(this.ContainsPos(visitedPos, newPos) == false && this.ContainsPos(posList, newPos) == false ) {
+                        posList.push(newPos);
+                    }
+                }
+                );
+
+                
+            }
+            visitedPos.push(currentPos);
+
+
+        }
+        return movementGrid;
+    }
+
+ 
     Draw() {
         this.container.removeChildren().forEach((item) => {
             item.destroy();
@@ -84,8 +162,28 @@ class Grid {
                 this.container.addChild(graphics);
 
                 let gridPos = this.CalculateGridPos(xPos, yPos, this.tileSize, this.tileSize);
-                if (this.blockGrid[gridPos.x][gridPos.y] != null) {
+                if (this.blockGrid[gridPos.x][gridPos.y] instanceof Block) {
                     this.container.addChild(this.blockGrid[gridPos.x][gridPos.y].GetGraphics());
+                }
+            }
+        }
+
+        if (this.movementGrid) {
+            for (let x = 0; x < this.gridSizeX; x++) {
+                let xPos = x * this.tileSize;
+                for (let y = 0; y < this.gridSizeY; y++) {
+                    let text = this.movementGrid[x][y];
+                    let yPos = y * this.tileSize;
+                    let pixiText = new PIXI.Text(text, {
+                        fontFamily: 'arial',
+                        fontSize: 12,
+                        fontWeight: 'bold',
+                        fill: 'white',
+                    });
+                    pixiText.x = xPos;
+                    pixiText.y = yPos;
+                    this.container.addChild(pixiText);
+                    
                 }
             }
         }
