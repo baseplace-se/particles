@@ -8,24 +8,16 @@ class Game {
         this.tileSize = tileSize;
         this.gridSizeX = (w / this.tileSize) - 3;
         this.gridSizeY = h / this.tileSize;
-        
-        
-
         this.textWidth = 192;
         this.gridWidth = width - this.textWidth;
-        this.frame = new PIXI.Graphics();
 
         this.particles = new Particles();
         this.text = new Textfield(this.width - (this.tileSize * 3), 0);
-        this.grid = new Grid(this.gridWidth, this.height, this.tileSize);
-
-
-        this.app.stage.addChild(this.frame);        
+        this.grid = new Grid(this.gridWidth, this.height, this.tileSize);    
 
         this.app.ticker.add((delta) => {
             this.Update();
             this.Draw();
-            // drawInfoText();
 
         });
     }

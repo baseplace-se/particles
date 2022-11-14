@@ -70,17 +70,6 @@ class Grid {
         }
     }
 
-    // GetBlockGrid(gridX, gridY) {
-    //     let blockGrid = new Array(this.gridSizeX); 
-    //     for (var x = 0; x < this.gridSizeX; x++) {
-    //         blockGrid[x] = new Array(this.gridSizeY);
-    //         for (var y = 0; y < this.gridSizeY; y++ ) {
-
-    //             blockGrid[x][y] = this.blockGrid[x][y] instanceof Block;
-    //         }
-    //         // blockGrid[i] = instanceof Block;
-    //     }
-    // }
 
     IsGridPosMovable(x, y) {
         if(x < 0 || y < 0) {
@@ -103,7 +92,6 @@ class Grid {
     }
 
     CalculateMovementGrid(gridX, gridY, grid, gridSizeX, gridSizeY) {
-        // let gridPos = this.CalculateGridPos(x, y, this.tileSize, this.tileSize)
         let posList = new Array();
         let visitedPos = new Array();
 
@@ -119,11 +107,9 @@ class Grid {
             let currentPos = posList.shift();
             if(grid.IsGridPosMovable(currentPos.x, currentPos.y)) {
                 movementGrid[currentPos.x][currentPos.y] = currentPos.depth;
-                // console.log(currentPos.depth);
                 this.movementDirections.forEach((point) =>  {
                     let newPos = currentPos.add(point);
                     newPos.depth = currentPos.depth + 1;
-                    // let newDepth = currentPos.depth + 1;
                     if(newPos.y < 0 || newPos.x < 0) {
                         return;
                     }

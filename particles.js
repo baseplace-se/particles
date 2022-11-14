@@ -29,7 +29,6 @@ class Particles {
     Update(goal) {
         this.particles.forEach((particle) => {
             particle.SetGoalPos(goal.GetX(), goal.GetY())
-            // console.log("Part")
             particle.Update();
             if(particle.atGoal == true) {
                 this.DestroyParticle(particle);
@@ -38,8 +37,6 @@ class Particles {
     }
 
     GetGraphics() {
-        // console.log(this.particles);
-        // console.log(this.particles.length);
         this.container.removeChildren().forEach((item) => {
             item.destroy();
         });
