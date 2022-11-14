@@ -14,6 +14,7 @@ class Game {
         this.particles = new Particles();
         this.text = new Textfield(this.width - (this.tileSize * 3), 0);
         this.grid = new Grid(this.gridWidth, this.height, this.tileSize);    
+        this.movementgrid = new Movementgrid(this.gridSizeX, this.gridSizeY);
 
         this.app.ticker.add((delta) => {
             this.Update();
@@ -49,9 +50,11 @@ class Game {
         
         this.particles.SpawnParticle(this.goal, this.gridWidth + 1, this.height + 1);
         this.particles.Update(this.goal);
-        let goalGridPos = this.grid.CalculateGridPos(this.goal.pos.x, this.goal.pos.y, this.tileSize, this.tileSize);
-        let movementGrid = this.grid.CalculateMovementGrid(goalGridPos.x, goalGridPos.y, this.grid, this.grid.gridSizeX, this.grid.gridSizeY);
-        this.grid.movementGrid = movementGrid;
+        let goalGridPos = this.movementgrid.CalculateGridPos(this.goal.pos.x, this.goal.pos.y, this.tileSize, this.tileSize);
+        this.movementgrid.Update(goalGridPos.x, goalGridPos.y, this.grid);
+        // let goalGridPos = this.grid.CalculateGridPos(this.goal.pos.x, this.goal.pos.y, this.tileSize, this.tileSize);
+        // let movementGrid = this.grid.CalculateMovementGrid(goalGridPos.x, goalGridPos.y, this.grid, this.grid.gridSizeX, this.grid.gridSizeY);
+        // this.grid.movementGrid = movementGrid;
         this.text.addtext(`FPS: ${this.app.ticker.FPS}`);
         this.text.addtext(`MouseX: ${input.getMousePosX()}, MouseY: ${input.getMousePosY()}`);
         this.text.addtext(`Dragging: ${this.grid.dragging}`);
@@ -68,6 +71,7 @@ class Game {
         
         this.app.stage.removeChildren();
         this.app.stage.addChild(this.grid.GetGraphics());
+        this.app.stage.addChild(this.movementgrid.GetGraphics());
         this.app.stage.addChild(this.text.GetGraphics());
         this.app.stage.addChild(this.particles.GetGraphics());
         
