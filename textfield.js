@@ -16,7 +16,7 @@ class Textfield {
     clear() {
         this.textList.length = 0;
     }
-    Draw() {
+    GetGraphics() {
 
         this.container.removeChildren().forEach((item) => {
             item.destroy();
@@ -34,6 +34,7 @@ class Textfield {
             offset += pixiText.height;
         });
         
+        return this.container;
         
     }
 }

@@ -147,7 +147,7 @@ class Grid {
     }
 
  
-    Draw() {
+    GetGraphics() {
         this.container.removeChildren().forEach((item) => {
             item.destroy();
         });
@@ -191,5 +191,6 @@ class Grid {
         if (this.draggingBlock != null) {
             this.container.addChild(this.draggingBlock.GetGraphics());
         }
+        return this.container;
     }
 }

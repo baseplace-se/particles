@@ -40,4 +40,15 @@ class Particle {
         }
         
     }
+
+    GetGraphics() {
+        let sprite = PIXI.Sprite.from('Particle.png');
+        sprite.width = 10;
+        sprite.height = 10;
+        sprite.x = this.pos.x;
+        sprite.y = this.pos.y;
+        sprite.anchor.set(0.5, 0.5);
+
+        return sprite;
+    }
 }
