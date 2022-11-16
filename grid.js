@@ -9,10 +9,6 @@ class Grid {
         this.draggingBlock = null;
         this.dragging = false;
         
-        this.blockGrid = new Array(this.gridSizeX); 
-        for (var i = 0; i < this.gridSizeX; i++) {
-            this.blockGrid[i] = new Array(this.gridSizeY);
-        }
 
         this.container = new PIXI.Container();
 
@@ -50,35 +46,7 @@ class Grid {
         return {x: x, y:y}
     }
 
-    SetBlock(x, y) {
-        let gridPos = this.CalculateGridPos(x, y, this.tileSize, this.tileSize);
-        let realPos = this.CalculateRealPos(gridPos.x, gridPos.y, this.tileSize, this.tileSize);
-        this.draggingBlock.SetPos(realPos.x, realPos.y);
-        this.blockGrid[gridPos.x][gridPos.y] = this.draggingBlock;
-        this.draggingBlock = null;
-    }
 
-    SetDraggingPos(x, y, gridPosX, gridPosY) {
-        let xOffset = x - (this.tileSize / 2);
-        let yOffset = y - (this.tileSize / 2);
-
-        if (this.draggingBlock == null) {
-            this.draggingBlock = new Block(xOffset, yOffset, this.tileSize);
-        } else {
-            this.draggingBlock.SetPos(xOffset, yOffset);
-        }
-    }
-
-
-    IsGridPosMovable(x, y) {
-        if(x < 0 || y < 0) {
-            return false;
-        }
-        if(x > this.gridSizeX || y > this.gridSizeY) {
-            return false;
-        }
-        return !(this.blockGrid[x][y] instanceof Block);
-    }
     
 
     GetGraphics() {
@@ -95,16 +63,7 @@ class Grid {
                 graphics.drawRect(xPos, yPos, this.tileSize, this.tileSize);
                 this.container.addChild(graphics);
 
-                let gridPos = this.CalculateGridPos(xPos, yPos, this.tileSize, this.tileSize);
-                if (this.blockGrid[gridPos.x][gridPos.y] instanceof Block) {
-                    this.container.addChild(this.blockGrid[gridPos.x][gridPos.y].GetGraphics());
-                }
             }
-        }
-
-
-        if (this.draggingBlock != null) {
-            this.container.addChild(this.draggingBlock.GetGraphics());
         }
         return this.container;
     }

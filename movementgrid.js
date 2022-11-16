@@ -75,13 +75,16 @@ class Movementgrid {
         // return movementGrid;
     }
 
-    GetGraphics() {
+    GetGraphics(tileSize) {
 
-        for (let x = 0; x < this.gridSizeX; x++) {
-            let xPos = x * this.tileSize;
-            for (let y = 0; y < this.gridSizeY; y++) {
+        this.container.removeChildren().forEach((item) => {
+            item.destroy();
+        });
+        for (let x = 0; x < this.width; x++) {
+            let xPos = x * tileSize;
+            for (let y = 0; y < this.height; y++) {
                 let text = this.movementGrid[x][y];
-                let yPos = y * this.tileSize;
+                let yPos = y * tileSize;
                 let pixiText = new PIXI.Text(text, {
                     fontFamily: 'arial',
                     fontSize: 12,
