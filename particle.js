@@ -2,8 +2,13 @@ class Particle {
     constructor(x, y, goalX, goalY) {
         this.pos = new PIXI.Point(x, y);
         this.goal = new PIXI.Point(goalX, goalY);
-
         this.atGoal = false;
+        this.sprite = PIXI.Sprite.from('Particle.png');
+        this.sprite.width = 10;
+        this.sprite.height = 10;
+        this.sprite.x = this.pos.x;
+        this.sprite.y = this.pos.y;
+        this.sprite.anchor.set(0.5, 0.5);
 
     }
     
@@ -32,19 +37,14 @@ class Particle {
                 
             }
             this.pos.add(difference, this.pos);
+            this.sprite.x = this.pos.x;
+            this.sprite.y = this.pos.y;
             this.atGoal = this.pos.equals(this.goal);
         }
         
     }
 
     GetGraphics() {
-        let sprite = PIXI.Sprite.from('Particle.png');
-        sprite.width = 10;
-        sprite.height = 10;
-        sprite.x = this.pos.x;
-        sprite.y = this.pos.y;
-        sprite.anchor.set(0.5, 0.5);
-
-        return sprite;
+        return this.sprite;
     }
 }

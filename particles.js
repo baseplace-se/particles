@@ -16,8 +16,10 @@ class Particles {
         if(this.particles.length <= this.maxParticles) {
             let posX = Math.floor(Math.random() * xMax);
             let posY = Math.floor(Math.random() * yMax);
-            let id = this.particles.length
-            this.particles.push(new Particle(posX, posY, goal.x, goal.y, id));
+            let id = this.particles.length;
+            let particle = new Particle(posX, posY, goal.x, goal.y, id);
+            this.particles.push(particle);
+            this.container.addChild(particle.GetGraphics());
         }
     }
 
@@ -31,21 +33,13 @@ class Particles {
             particle.SetGoalPos(goal.GetX(), goal.GetY())
             particle.Update();
             if(particle.atGoal == true) {
+                this.container.removeChild(particle.GetGraphics());
                 this.DestroyParticle(particle);
             }
         });
     }
 
     GetGraphics() {
-        this.container.removeChildren().forEach((item) => {
-            item.destroy();
-        });
-        for(let i = 0; i < this.particles.length; i++) {
-            let particle = this.particles[i];
-            
-            
-            this.container.addChild(particle.GetGraphics());
-        }
         return this.container;
     }
 }

@@ -1,6 +1,6 @@
 class Movementgrid {
 
-    constructor(width, height) {
+    constructor(width, height, tileSize) {
         this.container = new PIXI.Container();
         this.movementDirections = [new PIXI.Point(1, 0), new PIXI.Point(-1, 0), new PIXI.Point(0, 1), new PIXI.Point(0, -1)];
         this.width = width;
@@ -9,6 +9,25 @@ class Movementgrid {
         this.movementGrid = new Array(this.width); 
         for (var i = 0; i < this.width; i++) {
            this.movementGrid[i] = new Array(this.height);
+        }
+
+        this.graphicsGrid = new Array(this.width); 
+        for (var i = 0; i < this.width; i++) {
+            let xPos = i * tileSize;
+            this.graphicsGrid[i] = new Array(this.height);
+            for ( var j = 0; j < this.height; j++) {
+                let yPos = j * tileSize;
+                let pixiText = new PIXI.Text("-1", {
+                fontFamily: 'arial',
+                fontSize: 12,
+                fontWeight: 'bold',
+                fill: 'white',
+            });
+            pixiText.x = xPos;
+            pixiText.y = yPos;
+            this.graphicsGrid[i][j] = pixiText;
+            this.container.addChild(pixiText);
+           }
         }
 
     }
@@ -50,6 +69,7 @@ class Movementgrid {
             let currentPos = posList.shift();
             if(grid.IsGridPosMovable(currentPos.x, currentPos.y)) {
                 this.movementGrid[currentPos.x][currentPos.y] = currentPos.depth;
+                this.graphicsGrid[currentPos.x][currentPos.y].text = currentPos.depth;
                 this.movementDirections.forEach((point) =>  {
                     let newPos = currentPos.add(point);
                     newPos.depth = currentPos.depth + 1;
@@ -77,26 +97,6 @@ class Movementgrid {
 
     GetGraphics(tileSize) {
 
-        this.container.removeChildren().forEach((item) => {
-            item.destroy();
-        });
-        for (let x = 0; x < this.width; x++) {
-            let xPos = x * tileSize;
-            for (let y = 0; y < this.height; y++) {
-                let text = this.movementGrid[x][y];
-                let yPos = y * tileSize;
-                let pixiText = new PIXI.Text(text, {
-                    fontFamily: 'arial',
-                    fontSize: 12,
-                    fontWeight: 'bold',
-                    fill: 'white',
-                });
-                pixiText.x = xPos;
-                pixiText.y = yPos;
-                this.container.addChild(pixiText);
-                
-            }
-        }
 
         return this.container;
     }

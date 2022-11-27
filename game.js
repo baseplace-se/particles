@@ -15,17 +15,17 @@ class Game {
         this.text = new Textfield(this.width - (this.tileSize * 3), 0);
         this.grid = new Grid(this.gridWidth, this.height, this.tileSize);    
         this.blocks = new Blocks(this.gridSizeX, this.gridSizeY);
-        this.movementgrid = new Movementgrid(this.gridSizeX, this.gridSizeY);
+        this.movementgrid = new Movementgrid(this.gridSizeX, this.gridSizeY, this.tileSize);
 
         this.app.ticker.add((delta) => {
-            this.Update();
-            this.Draw();
+            this.Update(delta);
+            this.Draw(delta);
 
         });
     }
 
 
-    Update() {
+    Update(delta) {
         this.text.clear();
         let newX = input.getMousePosX();
         let newY = input.getMousePosY();
@@ -55,6 +55,7 @@ class Game {
         this.movementgrid.Update(goalGridPos.x, goalGridPos.y, this.blocks);
         
         this.text.addtext(`FPS: ${this.app.ticker.FPS}`);
+        this.text.addtext(`Delta: ${delta}`);
         this.text.addtext(`MouseX: ${input.getMousePosX()}, MouseY: ${input.getMousePosY()}`);
         this.text.addtext(`Dragging: ${this.grid.dragging}`);
         this.text.addtext(`PosX: ${goal.pos.x}, PosY: ${goal.pos.y}`);
@@ -66,13 +67,15 @@ class Game {
 
     
 
-    Draw() {
+    Draw(delta) {
         
         this.app.stage.removeChildren();
         this.app.stage.addChild(this.grid.GetGraphics());
         this.app.stage.addChild(this.blocks.GetGraphics());
         this.app.stage.addChild(this.movementgrid.GetGraphics(this.tileSize));
+    
         this.app.stage.addChild(this.text.GetGraphics());
+        
         this.app.stage.addChild(this.particles.GetGraphics());
     }
 }
