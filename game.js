@@ -49,10 +49,10 @@ class Game {
         }
         
         
-        this.particles.SpawnParticle(this.goal, this.gridWidth + 1, this.height + 1);
-        this.particles.Update(this.goal);
         let goalGridPos = this.movementgrid.CalculateGridPos(this.goal.pos.x, this.goal.pos.y, this.tileSize, this.tileSize);
         this.movementgrid.Update(goalGridPos.x, goalGridPos.y, this.blocks);
+        this.particles.Update(this.goal, this.movementgrid, this.tileSize);
+        this.particles.SpawnParticle(this.goal, this.gridWidth + 1, this.height + 1);
         
         this.text.addtext(`FPS: ${this.app.ticker.FPS}`);
         this.text.addtext(`Delta: ${delta}`);

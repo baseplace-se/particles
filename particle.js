@@ -1,7 +1,6 @@
 class Particle {
     constructor(x, y, goalX, goalY) {
         this.pos = new PIXI.Point(x, y);
-        this.goal = new PIXI.Point(goalX, goalY);
         this.atGoal = false;
         this.sprite = PIXI.Sprite.from('Particle.png');
         this.sprite.width = 10;
@@ -20,18 +19,15 @@ class Particle {
         return this.pos.y;
     }
 
-    SetGoalPos(x ,y) {
-        this.goal.x = x;
-        this.goal.y = y;
-    }
     SetPos(x, y) {
         this.pos.x = x;
         this.pos.y = y;
     }
 
-    Update() {
+    Update(goalPos, nextPos) {
         if(this.atGoal == false) {
-            let difference = this.goal.subtract(this.pos);
+            let difference = nextPos.subtract(this.pos);
+
             if(difference.magnitude() > 0.5) {
                 difference.multiplyScalar(0.1, difference);
                 
@@ -39,7 +35,7 @@ class Particle {
             this.pos.add(difference, this.pos);
             this.sprite.x = this.pos.x;
             this.sprite.y = this.pos.y;
-            this.atGoal = this.pos.equals(this.goal);
+            this.atGoal = this.pos.equals(goalPos);
         }
         
     }

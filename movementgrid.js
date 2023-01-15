@@ -54,6 +54,54 @@ class Movementgrid {
         let y = gridY * tileSizeY;
         return {x: x, y:y}
     }
+
+    GetClosestGridPos(gridPos) {
+        let nrOfMoves = this.movementGrid[gridPos.x][gridPos.y];
+        let nextPos = gridPos;
+        this.movementDirections.forEach((point) =>  {
+            let potentialPos = gridPos.add(point);
+            if(potentialPos.y < 0 || potentialPos.x < 0) {
+                return;
+            }
+            if(potentialPos.y >= this.height ||  potentialPos.x >= this.width) {
+                return;
+            }
+            let potentialNrOfMoves = this.movementGrid[potentialPos.x][potentialPos.y]
+            if(Number.isFinite(potentialNrOfMoves) && potentialNrOfMoves < nrOfMoves) {
+                nrOfMoves = potentialNrOfMoves;
+                nextPos = potentialPos;
+            }
+            
+        });
+        return nextPos
+    }
+
+    
+    GetNextMove(x, y, goal, tileSize) {
+        let gridPos = this.CalculateGridPos(x, y, tileSize, tileSize);
+        if(gridPos.x == goal.gridPos.x && gridPos.y == goal.gridPos.y ) {
+            return goal.pos;
+        }
+        
+        gridPos.x = Math.max(0, gridPos.x)
+        gridPos.x = Math.min(this.width - 1, gridPos.x)
+        gridPos.y = Math.max(0, gridPos.y)
+        gridPos.y = Math.min(this.height -1 , gridPos.y)
+        gridPos = new PIXI.Point(gridPos.x, gridPos.y);
+
+        let nextPos = this.GetClosestGridPos(gridPos);
+        let pos = this.CalculateRealPos(nextPos.x, nextPos.y, tileSize, tileSize);
+
+        let returnPos;
+        if(nextPos.y == gridPos.y) {
+            returnPos = new PIXI.Point(pos.x, y);
+        } else {
+            returnPos = new PIXI.Point(x, pos.y);
+        }
+
+        return returnPos;
+    }
+
     Update(goalGridX, goalGridY, grid) {
         let posList = new Array();
         let visitedPos = new Array();
@@ -87,6 +135,9 @@ class Movementgrid {
                 );
 
                 
+            } else {
+                this.movementGrid[currentPos.x][currentPos.y] = Infinity;
+                this.graphicsGrid[currentPos.x][currentPos.y].text = "Infinity";
             }
             visitedPos.push(currentPos);
 

@@ -28,10 +28,10 @@ class Particles {
 
     }
 
-    Update(goal) {
+    Update(goal, movementgrid, tileSize) {
         this.particles.forEach((particle) => {
-            particle.SetGoalPos(goal.GetX(), goal.GetY())
-            particle.Update();
+            let nextPos = movementgrid.GetNextMove(particle.GetX(), particle.GetY(), goal, tileSize);
+            particle.Update(goal.pos, nextPos);
             if(particle.atGoal == true) {
                 this.container.removeChild(particle.GetGraphics());
                 this.DestroyParticle(particle);
