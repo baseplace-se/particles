@@ -5,7 +5,7 @@ class Movementgrid {
         this.movementDirections = [new PIXI.Point(1, 0), new PIXI.Point(-1, 0), new PIXI.Point(0, 1), new PIXI.Point(0, -1)];
         this.width = width;
         this.height = height;
-
+        this.tileSize = tileSize;
         this.movementGrid = new Array(this.width); 
         for (var i = 0; i < this.width; i++) {
            this.movementGrid[i] = new Array(this.height);
@@ -76,8 +76,18 @@ class Movementgrid {
         return nextPos
     }
 
+    OutOfBounds(x, y) {
+        if(y < 0 || x < 0) {
+            return true;
+        }
+        if(y >= this.height ||  x >= this.width) {
+            return true;
+        }
+        return false;
+    }
     
-    GetNextMove(x, y, goal, tileSize) {
+    GetNextMove(x, y, goal) {
+        let tileSize = this.tileSize;
         let gridPos = this.CalculateGridPos(x, y, tileSize, tileSize);
         if(gridPos.x == goal.gridPos.x && gridPos.y == goal.gridPos.y ) {
             return goal.pos;
@@ -102,51 +112,44 @@ class Movementgrid {
         return returnPos;
     }
 
-    Update(goalGridX, goalGridY, grid) {
+    SetGridValue(x,y, value) {
+        this.movementGrid[x][y] = value;
+        this.graphicsGrid[x][y].text = value;
+    }
+
+    Update(goalGridX, goalGridY, blocks) {
         let posList = new Array();
         let visitedPos = new Array();
-        let gridSizeX = this.width;
-        let gridSizeY = this.height;
-
-        
 
         let startPos =  new PIXI.Point(goalGridX, goalGridY);
         startPos.depth = 0;
         posList.push(startPos);
         while(posList.length > 0) {
             let currentPos = posList.shift();
-            if(grid.IsGridPosMovable(currentPos.x, currentPos.y)) {
-                this.movementGrid[currentPos.x][currentPos.y] = currentPos.depth;
-                this.graphicsGrid[currentPos.x][currentPos.y].text = currentPos.depth;
+            if(blocks.IsGridPosMovable(currentPos.x, currentPos.y)) {
+                this.SetGridValue(currentPos.x, currentPos.y, currentPos.depth);
                 this.movementDirections.forEach((point) =>  {
                     let newPos = currentPos.add(point);
                     newPos.depth = currentPos.depth + 1;
-                    if(newPos.y < 0 || newPos.x < 0) {
+
+                    if (this.OutOfBounds(newPos.x, newPos.y)) {
                         return;
                     }
-                    if(newPos.y >= gridSizeY ||  newPos.x >= gridSizeX) {
-                        return;
-                    }
-    
                     if(this.ContainsPos(visitedPos, newPos) == false && this.ContainsPos(posList, newPos) == false ) {
                         posList.push(newPos);
                     }
                 }
                 );
-
-                
             } else {
                 this.movementGrid[currentPos.x][currentPos.y] = Infinity;
                 this.graphicsGrid[currentPos.x][currentPos.y].text = "Infinity";
             }
             visitedPos.push(currentPos);
 
-
         }
-        // return movementGrid;
     }
 
-    GetGraphics(tileSize) {
+    GetGraphics() {
 
 
         return this.container;
