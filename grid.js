@@ -26,24 +26,6 @@ class Grid {
 
             }
         }
-
-        this.container.on("mousemove", (event) => {
-            input.inputMousePos(event.data.global.x, event.data.global.y);
-        });
-        this.container.on("mouseout", (event) => {
-            input.inputMouseBounds(false);
-        });
-        this.container.on("mouseover", (event) => {
-            input.inputMouseBounds(true);
-        });
-
-        this.container.on('pointerdown', (event) => {
-            input.inputMouseDown(true);
-        });
-
-        this.container.on('pointerup', (event) => {
-            input.inputMouseDown(false);
-        });
     }
 
     CalculateGridPos(x, y, tileSizeX, tileSizeY) {

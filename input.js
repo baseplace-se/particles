@@ -28,6 +28,27 @@ var input = (function () {
         }          
     }
 
+    function _setupInput(container) {
+        container.on("mousemove", (event) => {
+            input.inputMousePos(event.data.global.x, event.data.global.y);
+        });
+        container.on("mouseout", (event) => {
+            input.inputMouseBounds(false);
+        });
+        container.on("mouseover", (event) => {
+            input.inputMouseBounds(true);
+        });
+        
+        container.on('pointerdown', (event) => {
+            input.inputMouseDown(true);
+        });
+        
+        container.on('pointerup', (event) => {
+            input.inputMouseDown(false);
+        });
+
+    }
+
     return {
         inputMousePos: function (x, y) {
             _inputMousePos(x, y);
@@ -49,6 +70,11 @@ var input = (function () {
         },
         getMousePosY: function () {
             return mouseY;
+        },
+        setupInput: function(container) {
+            return _setupInput(container);
         }
     };
 })();
+
+

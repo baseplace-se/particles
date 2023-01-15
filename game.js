@@ -17,6 +17,8 @@ class Game {
         this.blocks = new Blocks(this.gridSizeX, this.gridSizeY);
         this.movementgrid = new Movementgrid(this.gridSizeX, this.gridSizeY, this.tileSize);
 
+        input.setupInput(this.grid.container);
+
         this.app.ticker.add((delta) => {
             this.Update(delta);
             this.Draw(delta);
