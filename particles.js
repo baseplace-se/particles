@@ -3,6 +3,7 @@
 class Particles {
     constructor(){
         this.maxParticles = 1500;
+        this.maxVelocity = 5;
         this.particles = new Array();
         this.container = new PIXI.Container();
         this.goal = new PIXI.Point(0,0);
@@ -18,7 +19,7 @@ class Particles {
             let posX = Math.floor(Math.random() * xMax);
             let posY = Math.floor(Math.random() * yMax);
             let id = this.particles.length;
-            let particle = new Particle(posX, posY);
+            let particle = new Particle(posX, posY, this.maxVelocity);
             this.particles.push(particle);
             this.container.addChild(particle.GetGraphics());
         }
