@@ -1,6 +1,7 @@
 # TODO
 * Give particles velocity.
 * Make sure particles are not spawning on a blocked grid.
+* Make sure movementgrid is cleared in blocked of areas.
 
 
 # Questions/Learnings
