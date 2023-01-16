@@ -4,9 +4,7 @@ let h = 640;
 let tileSize = 64;
 
 
+game = new Game(w, h, tileSize);
 
-goal = new Goal();
-game = new Game(goal, w, h, tileSize);
-    
 
 

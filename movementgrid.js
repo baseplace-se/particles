@@ -46,13 +46,13 @@ class Movementgrid {
     CalculateGridPos(x, y, tileSizeX, tileSizeY) {
         let gridX  = Math.floor(x / tileSizeX);
         let gridY  = Math.floor(y / tileSizeY);
-        return {x: gridX, y: gridY};
+        return new PIXI.Point(gridX, gridY);
     }
 
     CalculateRealPos(gridX, gridY, tileSizeX, tileSizeY) {
         let x = gridX * tileSizeX;
         let y = gridY * tileSizeY;
-        return {x: x, y:y}
+        return new PIXI.Point(x, y);
     }
 
     GetClosestGridPos(gridPos) {
@@ -89,8 +89,9 @@ class Movementgrid {
     GetNextMove(x, y, goal) {
         let tileSize = this.tileSize;
         let gridPos = this.CalculateGridPos(x, y, tileSize, tileSize);
-        if(gridPos.x == goal.gridPos.x && gridPos.y == goal.gridPos.y ) {
-            return goal.pos;
+        let goalGridPos = this.CalculateGridPos(goal.x, goal.y, tileSize, tileSize);
+        if(gridPos.equals(goalGridPos)) {
+            return goal;
         }
         
         gridPos.x = Math.max(0, gridPos.x)
@@ -117,11 +118,11 @@ class Movementgrid {
         this.graphicsGrid[x][y].text = value;
     }
 
-    Update(goalGridX, goalGridY, blocks) {
+    Update(goal, blocks) {
         let posList = new Array();
         let visitedPos = new Array();
-
-        let startPos =  new PIXI.Point(goalGridX, goalGridY);
+        
+        let startPos =  this.CalculateGridPos(goal.x, goal.y, this.tileSize, this.tileSize);
         startPos.depth = 0;
         posList.push(startPos);
         while(posList.length > 0) {
@@ -141,6 +142,7 @@ class Movementgrid {
                 }
                 );
             } else {
+                // his.SetGridValue(currentPos.x, currentPos.y, currentPos.depth);
                 this.movementGrid[currentPos.x][currentPos.y] = Infinity;
                 this.graphicsGrid[currentPos.x][currentPos.y].text = "Infinity";
             }

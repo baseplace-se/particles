@@ -1,8 +1,7 @@
 class Game {
-    constructor(goal, width, height, tileSize, nrOfParticles) {
+    constructor(width, height, tileSize, nrOfParticles) {
         this.app = new PIXI.Application({ width: width, height: height });
         document.body.appendChild(this.app.view);
-        this.goal = goal;
         this.width = width;
         this.height = height;
         this.tileSize = tileSize;
@@ -35,12 +34,7 @@ class Game {
         
         
         if (newX != null && newY != null) {
-            this.goal.pos.x = newX;
-            this.goal.gridPos.x = Math.floor(newX / this.tileSize);
-
-            this.goal.pos.y = newY;
-            this.goal.gridPos.y = Math.floor(newY / this.tileSize);
-
+            this.particles.SetGoal(newX, newY);
             if (mouseDown == true) {
                 this.blocks.dragging = true;
                 this.blocks.SetDraggingPos(newX, newY, this.tileSize);
@@ -51,17 +45,16 @@ class Game {
         }
         
         
-        let goalGridPos = this.movementgrid.CalculateGridPos(this.goal.pos.x, this.goal.pos.y, this.tileSize, this.tileSize);
-        this.movementgrid.Update(goalGridPos.x, goalGridPos.y, this.blocks);
-        this.particles.Update(this.goal, this.movementgrid, this.tileSize);
-        this.particles.SpawnParticle(this.goal, this.gridWidth + 1, this.height + 1);
+        this.particles.Update(this.movementgrid, this.tileSize, this.blocks);
+        this.particles.SpawnParticle(this.gridWidth + 1, this.height + 1);
         
         this.text.addtext(`FPS: ${this.app.ticker.FPS}`);
         this.text.addtext(`Delta: ${delta}`);
         this.text.addtext(`MouseX: ${input.getMousePosX()}, MouseY: ${input.getMousePosY()}`);
         this.text.addtext(`Dragging: ${this.grid.dragging}`);
-        this.text.addtext(`PosX: ${goal.pos.x}, PosY: ${goal.pos.y}`);
-        this.text.addtext(`GridX: ${goal.gridPos.x}, GridY: ${goal.gridPos.y}`);
+        this.text.addtext(`PosX: ${this.particles.goal.x}, PosY: ${this.particles.goal.y}`);
+        let goalGridpos = this.movementgrid.CalculateGridPos(this.particles.goal.x, this.particles.goal.y, this.tileSize, this.tileSize);
+        this.text.addtext(`GridX: ${goalGridpos.x}, GridY: ${goalGridpos.y}`);
         this.text.addtext(`nrOfParticles: ${this.particles.GetNumberOfParticles()}`);
 
 

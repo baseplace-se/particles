@@ -1,5 +1,5 @@
 class Particle {
-    constructor(x, y, goalX, goalY) {
+    constructor(x, y) {
         this.pos = new PIXI.Point(x, y);
         this.atGoal = false;
         this.sprite = PIXI.Sprite.from('Particle.png');
