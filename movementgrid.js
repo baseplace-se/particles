@@ -118,9 +118,15 @@ class Movementgrid {
         this.graphicsGrid[x][y].text = value;
     }
 
+    GetGridValue(x, y) {
+        this.movementGrid[x][y]
+    }
+
     Update(goal, blocks) {
+        // TODO: This need to be rewritten. Its a monster
         let posList = new Array();
         let visitedPos = new Array();
+        let potentialBlockedPosList = new Array();
         
         let startPos =  this.CalculateGridPos(goal.x, goal.y, this.tileSize, this.tileSize);
         startPos.depth = 0;
@@ -139,15 +145,44 @@ class Movementgrid {
                     if(this.ContainsPos(visitedPos, newPos) == false && this.ContainsPos(posList, newPos) == false ) {
                         posList.push(newPos);
                     }
-                }
-                );
+                });
             } else {
                 // his.SetGridValue(currentPos.x, currentPos.y, currentPos.depth);
                 this.movementGrid[currentPos.x][currentPos.y] = Infinity;
                 this.graphicsGrid[currentPos.x][currentPos.y].text = "Infinity";
+                this.movementDirections.forEach((point) =>  {
+                    let newPos = currentPos.add(point);
+                    newPos.depth = Infinity;
+
+                    if (this.OutOfBounds(newPos.x, newPos.y)) {
+                        return;
+                    }
+                    if(this.ContainsPos(visitedPos, newPos) == false && this.ContainsPos(potentialBlockedPosList, newPos) == false ) {
+                        potentialBlockedPosList.push(newPos);
+                    }
+                });
+                
             }
             visitedPos.push(currentPos);
+        }
+        while (potentialBlockedPosList.length > 0) {
+            let currentPos = potentialBlockedPosList.shift();
+            if (this.ContainsPos(visitedPos, currentPos)) {
+                return;
+            }
+            this.SetGridValue(currentPos.x, currentPos.y, Infinity);
+            this.movementDirections.forEach((point) =>  {
+                let newPos = currentPos.add(point);
+                newPos.depth = Infinity;
 
+                if (this.OutOfBounds(newPos.x, newPos.y)) {
+                    return;
+                }
+                if(this.ContainsPos(visitedPos, newPos) == false && this.ContainsPos(potentialBlockedPosList, newPos) == false ) {
+                    potentialBlockedPosList.push(newPos);
+                }
+            });
+            visitedPos.push(currentPos);
         }
     }
 

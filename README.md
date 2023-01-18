@@ -1,7 +1,6 @@
 # TODO
 * Improve close to goal accuracy. When particles are close to goal they miss their goal.
 * Make sure particles are not spawning on a blocked grid.
-* Make sure movementgrid is cleared in blocked of areas.
 
 
 # Questions/Learnings
