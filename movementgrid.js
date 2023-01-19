@@ -177,7 +177,7 @@ class Movementgrid {
         while (potentialBlockedPosList.length > 0) {
             let currentPos = potentialBlockedPosList.shift();
             if (this.ContainsPos(visitedPos, currentPos)) {
-                return;
+                continue;
             }
             this.SetGridValue(currentPos.x, currentPos.y, Infinity);
             this.movementDirections.forEach((point) =>  {
