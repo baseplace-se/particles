@@ -1,5 +1,9 @@
 # TODO
 * Improve close to goal accuracy. When particles are close to goal they miss their goal.
+* Some particles passes through blocks. I think they have to much speed. Fix this. Collision detection and bounce.
+* Already spawned particles get trapped in blocked off areas. Kill particles that doesnt move for a while.
+* Fix the monsterous movementgrid algorithm
+* Publish app on github
 
 
 # Questions/Learnings
