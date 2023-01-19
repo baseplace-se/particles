@@ -122,6 +122,11 @@ class Movementgrid {
         this.movementGrid[x][y]
     }
 
+    IsPosMovable(x, y) {
+        let gridPos = this.CalculateGridPos(x, y, this.tileSize, this.tileSize);
+        return Number.isFinite(this.movementGrid[gridPos.x][gridPos.y]);
+    }
+
     Update(goal, blocks) {
         // TODO: This need to be rewritten. Its a monster
         let posList = new Array();
@@ -129,6 +134,10 @@ class Movementgrid {
         let potentialBlockedPosList = new Array();
         
         let startPos =  this.CalculateGridPos(goal.x, goal.y, this.tileSize, this.tileSize);
+        if(!blocks.IsGridPosMovable(startPos.x, startPos.y)) {
+            this.SetGridValue(startPos.x, startPos.y, Infinity);
+            return;
+        }
         startPos.depth = 0;
         posList.push(startPos);
         while(posList.length > 0) {

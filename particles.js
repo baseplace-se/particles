@@ -14,11 +14,15 @@ class Particles {
         return this.particles.length;
     }
 
-    SpawnParticle(xMax, yMax) {
+    SpawnParticle(xMax, yMax, movementgrid) {
         if(this.particles.length <= this.maxParticles) {
+            
             let posX = Math.floor(Math.random() * xMax);
             let posY = Math.floor(Math.random() * yMax);
-            let id = this.particles.length;
+            while(!movementgrid.IsPosMovable(posX, posY)) {
+                posX = Math.floor(Math.random() * xMax);
+                posY = Math.floor(Math.random() * yMax);
+            }
             let particle = new Particle(posX, posY, this.maxVelocity);
             this.particles.push(particle);
             this.container.addChild(particle.GetGraphics());

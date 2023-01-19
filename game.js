@@ -46,7 +46,7 @@ class Game {
         
         
         this.particles.Update(this.movementgrid, this.tileSize, this.blocks);
-        this.particles.SpawnParticle(this.gridWidth + 1, this.height + 1);
+        this.particles.SpawnParticle(this.gridWidth, this.height, this.movementgrid);
         
         this.text.addtext(`FPS: ${this.app.ticker.FPS}`);
         this.text.addtext(`Delta: ${delta}`);
